@@ -29,7 +29,7 @@ dataset.fit(
     ((x['user_id'], x['game_id']) for _, x in user_game_data.iterrows())
 )
 
-# Model init
+# Model init ???
 model = LightFM(loss='warp')
 
 # Train
