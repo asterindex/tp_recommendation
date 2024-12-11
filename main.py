@@ -1,6 +1,7 @@
 # Install LightFM if you haven't already
 # !pip install lightfm
 
+import pickle
 import pandas as pd
 from lightfm import LightFM
 from lightfm.data import Dataset
@@ -41,6 +42,21 @@ auc = auc_score(model, interactions).mean()
 print("Precision@k (k=10): {:.4f}".format(precision))
 print("AUC Score: {:.4f}".format(auc))
 
+# saving *******
+
+# Save the model to a file
+model_file = 'lightfm_model.pkl'
+with open(model_file, 'wb') as f:
+    pickle.dump(model, f)
+print(f"Model saved to {model_file}")
+
+# Load the model back from the file
+with open(model_file, 'rb') as f:
+    loaded_model = pickle.load(f)
+print("Model loaded successfully")
+
+
+
 # Obtain user activities
 user_activity = np.array(interactions.sum(axis=1)).flatten()
 print("User activity (number of interactions):", user_activity[:10])  # The first 10 users
@@ -50,7 +66,7 @@ user_id = 1562727  # пример user_id
 user_internal_id = dataset.mapping()[0].get(user_id)  # Преобразуем user_id в внутренний id LightFM
 
 n_items = interactions.shape[1]  # Общее количество элементов
-scores = model.predict(user_internal_id, list(range(n_items)))
+scores = loaded_model.predict(user_internal_id, list(range(n_items)))
 
 
 # Sorting
